@@ -1,6 +1,4 @@
-# OSGI_SA_Assignemnt1
-
-# Smart Convenience Shop
+# OSGI_SA_Assignemnt1 : Smart Convenience Shop
 
 ## Overview
 The **Smart Convenience Shop** is an advanced system designed for large-scale restaurant networks, integrating smart inventory management, personalized customer preferences, dynamic pricing, and order handling. The system ensures the freshest items are delivered to customers at optimized prices, based on their preferences and real-time data. By combining these pillars, the system improves customer experience while optimizing operational efficiency.

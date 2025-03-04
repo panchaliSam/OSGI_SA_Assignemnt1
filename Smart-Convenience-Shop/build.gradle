@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'biz.aQute.bnd.builder' version '6.3.1'
+}
+
+group = 'com.osgi'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.osgi:osgi.core:6.0.0'
+    implementation 'org.apache.felix:org.apache.felix.framework:7.0.5'
+
+    // Felix Gogo Shell (optional, for debugging)
+    implementation 'org.apache.felix:org.apache.felix.gogo.shell:1.1.4'
+    implementation 'org.apache.felix:org.apache.felix.gogo.runtime:1.1.4'
+    implementation 'org.apache.felix:org.apache.felix.gogo.command:1.0.2'
+}
+
+// Ensure UTF-8 encoding for compiled classes
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// PRODUCER (Inventory Service) Bundle Configuration
+task producerJar(type: Jar) {
+    archiveBaseName.set("inventory-producer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Inventory Producer',
+                'Bundle-SymbolicName': 'inventory_producer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework',
+                'Export-Package': 'inventory_producer',
+                'Bundle-Activator': 'inventory_producer.ServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+// CONSUMER (Stock Notifier) Bundle Configuration
+task consumerJar(type: Jar) {
+    archiveBaseName.set("inventory-consumer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Inventory Consumer',
+                'Bundle-SymbolicName': 'inventory_consumer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework, inventory_producer',
+                'Export-Package': 'inventory_consumer',
+                'Bundle-Activator': 'inventory_consumer.ServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+// Ensure both JARs are built
+tasks.build.dependsOn producerJar, consumerJar

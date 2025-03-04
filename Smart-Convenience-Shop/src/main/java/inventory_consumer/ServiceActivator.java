@@ -32,11 +32,10 @@ public class ServiceActivator implements BundleActivator {
 
                 System.out.print("Enter quantity: ");
                 int quantity = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
 
                 inventoryService.purchaseItem(item, quantity);
 
-                // Check stock levels
                 System.out.println(inventoryService.getLowStockLevels());
             }
 

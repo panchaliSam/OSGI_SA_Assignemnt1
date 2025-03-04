@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryServiceImplementation implements InventoryService {
-
     private final Map<String, Integer> inventory;
 
     public InventoryServiceImplementation() {
@@ -34,7 +33,7 @@ public class InventoryServiceImplementation implements InventoryService {
             int currentStock = inventory.get(itemName);
             if (currentStock >= quantity) {
                 inventory.put(itemName, currentStock - quantity);
-                System.out.println("✅ Successfully purchased " + quantity + " " + itemName + "(s). Remaining stock: " + inventory.get(itemName));
+                System.out.println("✅ Successfully purchased " + quantity + " " + itemName + "(s). \nRemaining stock: " + inventory.get(itemName));
             } else {
                 System.out.println("❌ Not enough stock! Only " + currentStock + " " + itemName + "(s) available.");
             }

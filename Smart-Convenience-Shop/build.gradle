@@ -63,5 +63,43 @@ task consumerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// Ensure both JARs are built
-tasks.build.dependsOn producerJar, consumerJar
+// ✅ PREFERENCE PRODUCER Bundle Configuration
+task preferenceProducerJar(type: Jar) {
+    archiveBaseName.set("preference-producer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Preference Producer',
+                'Bundle-SymbolicName': 'preference_producer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework',
+                'Export-Package': 'preference_producer',
+                'Bundle-Activator': 'preference_producer.ServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+// ✅ PREFERENCE CONSUMER Bundle Configuration
+task preferenceConsumerJar(type: Jar) {
+    archiveBaseName.set("preference-consumer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Preference Consumer',
+                'Bundle-SymbolicName': 'preference_consumer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework, preference_producer',
+                'Export-Package': 'preference_consumer',
+                'Bundle-Activator': 'preference_consumer.ServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+// ✅ Ensure all JAR tasks are included in the build
+tasks.build.dependsOn producerJar, consumerJar, preferenceProducerJar, preferenceConsumerJar

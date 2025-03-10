@@ -25,7 +25,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// PRODUCER (Inventory Service) Bundle Configuration
+// ✅ INVENTORY PRODUCER Bundle Configuration
 task producerJar(type: Jar) {
     archiveBaseName.set("inventory-producer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -44,7 +44,7 @@ task producerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// CONSUMER (Stock Notifier) Bundle Configuration
+// ✅ INVENTORY CONSUMER Bundle Configuration
 task consumerJar(type: Jar) {
     archiveBaseName.set("inventory-consumer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -101,5 +101,43 @@ task preferenceConsumerJar(type: Jar) {
     from sourceSets.main.output
 }
 
+// ✅ ORDER PRODUCER Bundle Configuration
+task orderProducerJar(type: Jar) {
+    archiveBaseName.set("order-producer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Order Producer',
+                'Bundle-SymbolicName': 'order_producer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework',
+                'Export-Package': 'order_producer',
+                'Bundle-Activator': 'order_producer.OrderServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+// ✅ ORDER CONSUMER Bundle Configuration
+task orderConsumerJar(type: Jar) {
+    archiveBaseName.set("order-consumer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Order Consumer',
+                'Bundle-SymbolicName': 'order_consumer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework, order_producer',
+                'Export-Package': 'order_consumer',
+                'Bundle-Activator': 'order_consumer.OrderConsumerActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
 // ✅ Ensure all JAR tasks are included in the build
-tasks.build.dependsOn producerJar, consumerJar, preferenceProducerJar, preferenceConsumerJar
+tasks.build.dependsOn producerJar, consumerJar, preferenceProducerJar, preferenceConsumerJar, orderProducerJar, orderConsumerJar

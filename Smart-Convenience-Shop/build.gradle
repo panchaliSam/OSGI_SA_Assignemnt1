@@ -25,7 +25,7 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// ✅ INVENTORY PRODUCER Bundle Configuration
+// INVENTORY PRODUCER Bundle Configuration
 task producerJar(type: Jar) {
     archiveBaseName.set("inventory-producer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -44,7 +44,7 @@ task producerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// ✅ INVENTORY CONSUMER Bundle Configuration
+//  INVENTORY CONSUMER Bundle Configuration
 task consumerJar(type: Jar) {
     archiveBaseName.set("inventory-consumer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -63,7 +63,7 @@ task consumerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// ✅ PREFERENCE PRODUCER Bundle Configuration
+// PREFERENCE PRODUCER Bundle Configuration
 task preferenceProducerJar(type: Jar) {
     archiveBaseName.set("preference-producer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -82,7 +82,7 @@ task preferenceProducerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// ✅ PREFERENCE CONSUMER Bundle Configuration
+// PREFERENCE CONSUMER Bundle Configuration
 task preferenceConsumerJar(type: Jar) {
     archiveBaseName.set("preference-consumer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -101,7 +101,7 @@ task preferenceConsumerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// ✅ ORDER PRODUCER Bundle Configuration
+//ORDER PRODUCER Bundle Configuration
 task orderProducerJar(type: Jar) {
     archiveBaseName.set("order-producer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -120,7 +120,7 @@ task orderProducerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// ✅ ORDER CONSUMER Bundle Configuration
+//ORDER CONSUMER Bundle Configuration
 task orderConsumerJar(type: Jar) {
     archiveBaseName.set("order-consumer")
     destinationDirectory.set(file("$buildDir/libs"))
@@ -139,5 +139,43 @@ task orderConsumerJar(type: Jar) {
     from sourceSets.main.output
 }
 
-// ✅ Ensure all JAR tasks are included in the build
-tasks.build.dependsOn producerJar, consumerJar, preferenceProducerJar, preferenceConsumerJar, orderProducerJar, orderConsumerJar
+//PRICING PRODUCER Bundle Configuration
+task pricingProducerJar(type: Jar){
+    archiveBaseName.set("pricing-producer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Pricing Producer',
+                'Bundle-SymbolicName': 'pricing_producer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework',
+                'Export-Package': 'pricing_producer',
+                'Bundle-Activator': 'pricing_producer.ServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+//PRICING CONSUMER Bundle Configuration
+task pricingConsumerJar(type: Jar){
+    archiveBaseName.set("pricing-consumer")
+    destinationDirectory.set(file("$buildDir/libs"))
+
+    manifest {
+        attributes(
+                'Bundle-ManifestVersion': '2',
+                'Bundle-Name': 'Pricing Consumer',
+                'Bundle-SymbolicName': 'pricing_consumer',
+                'Bundle-Version': project.version,
+                'Import-Package': 'org.osgi.framework, pricing_producer',
+                'Export-Package': 'pricing_producer',
+                'Bundle-Activator': 'pricing_producer.ServiceActivator'
+        )
+    }
+    from sourceSets.main.output
+}
+
+//Ensure all JAR tasks are included in the build
+tasks.build.dependsOn producerJar, consumerJar, preferenceProducerJar, preferenceConsumerJar, orderProducerJar, orderConsumerJar, pricingProducerJar, pricingConsumerJar
